@@ -57,7 +57,9 @@ SearchResult RRT::startSearch(Map &map, const Config &config, const ConflictAvoi
     Node cur(map.getStart_j() + 0.5, map.getStart_i() + 0.5, nullptr, 0);
     Node goal(map.getGoal_j() + 0.5, map.getGoal_i() + 0.5);
     cur.pointId = 0;
-    nodes.push_back(cur);
+    std::vector<Node> startVersions;
+    getNodeVersions(map, CAT, cur, startVersions);
+    nodes.push_back(startVersions[0]);
 
     int iter = 1;
     sresult.pathfound = false;
@@ -68,8 +70,6 @@ SearchResult RRT::startSearch(Map &map, const Config &config, const ConflictAvoi
         if (elapsedMilliseconds > 1000 * config.maxTime) {
             break;
         }
-
-        //std::cout << iter << std::endl;
 
         cur = Node(map.getRandom_i(rng), map.getRandom_j(rng));
         cur.pointId = iter++;
@@ -98,9 +98,9 @@ SearchResult RRT::startSearch(Map &map, const Config &config, const ConflictAvoi
         addNode(cur, parentIt, map, CAT);
     }
 
-    std::vector<Node> versions;
-    getNodeVersions(map, CAT, goal, versions);
-    Node version = versions.back();
+    std::vector<Node> goalVersions;
+    getNodeVersions(map, CAT, goal, goalVersions);
+    Node version = goalVersions.back();
     double bestG = CN_INFINITY;
     Node* parent = nullptr;
     for (auto& node : nodes) {
@@ -141,7 +141,7 @@ void RRT::makePath(const Node &curNode, const Node* nextNode)
 {
     if (nextNode != nullptr) {
         double dist = distance(curNode, *nextNode);
-        if (nextNode->g - curNode.g > dist) {
+        if (nextNode->g - curNode.g > dist + CN_EPSILON) {
             Node waitNode = curNode;
             waitNode.g = nextNode->g - dist;
             path.push_front(waitNode);

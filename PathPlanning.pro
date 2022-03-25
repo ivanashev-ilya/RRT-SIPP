@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = ASearch
+TARGET = RRT_SIPP
 CONFIG   += console
 CONFIG   -= app_bundle
 TEMPLATE = app
@@ -54,3 +54,6 @@ HEADERS += \
     config.h \
     searchresult.h \
     environmentoptions.h
+
+DISTFILES += \
+    README.md

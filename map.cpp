@@ -78,14 +78,14 @@ bool Map::getMap(const char *FileName)
         stream.clear();
         stream << element->GetText();
 
-        if (!hasGridMem && hasHeight && hasWidth) {
+        /*if (!hasGridMem && hasHeight && hasWidth) {
             Grid = new int *[height];
             for (int i = 0; i < height; ++i)
                 Grid[i] = new int[width];
             hasGridMem = true;
-        }
+        }*/
 
-        if (value == CNS_TAG_HEIGHT) {
+        /*if (value == CNS_TAG_HEIGHT) {
             if (hasHeight) {
                 std::cout << "Warning! Duplicate '" << CNS_TAG_HEIGHT << "' encountered." << std::endl;
                 std::cout << "Only first value of '" << CNS_TAG_HEIGHT << "' =" << height << "will be used."
@@ -120,8 +120,8 @@ bool Map::getMap(const char *FileName)
                 else
                     hasWidth = true;
             }
-        }
-        else if (value == CNS_TAG_CELLSIZE) {
+        }*/
+        if (value == CNS_TAG_CELLSIZE) {
             if (hasCellSize) {
                 std::cout << "Warning! Duplicate '" << CNS_TAG_CELLSIZE << "' encountered." << std::endl;
                 std::cout << "Only first value of '" << CNS_TAG_CELLSIZE << "' =" << cellSize << "will be used."
@@ -238,11 +238,22 @@ bool Map::getMap(const char *FileName)
         }
         else if (value == CNS_TAG_GRID) {
             hasGrid = true;
-            if (!(hasHeight && hasWidth)) {
+            /*if (!(hasHeight && hasWidth)) {
                 std::cout << "Error! No '" << CNS_TAG_WIDTH << "' tag or '" << CNS_TAG_HEIGHT << "' tag before '"
                           << CNS_TAG_GRID << "'tag encountered!" << std::endl;
                 return false;
+            }*/
+            height = mapnode->DoubleAttribute(CNS_TAG_HEIGHT);
+            width = mapnode->DoubleAttribute(CNS_TAG_WIDTH);
+            hasHeight = hasWidth = true;
+
+            if (!hasGridMem) {
+                Grid = new int *[height];
+                for (int i = 0; i < height; ++i)
+                    Grid[i] = new int[width];
+                hasGridMem = true;
             }
+
             element = mapnode->FirstChildElement();
             while (grid_i < height) {
                 if (!element) {

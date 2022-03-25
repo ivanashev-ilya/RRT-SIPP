@@ -39,7 +39,7 @@ bool DynamicObstacles::getObstacles(const char *fileName)
     obstacle obs;
     for(XMLElement *element = root->FirstChildElement(CNS_TAG_OBSTACLE); element; element = element->NextSiblingElement(CNS_TAG_OBSTACLE))
     {
-        obs.id = element->Attribute(CNS_TAG_ATTR_ID);
+        //obs.id = element->Attribute(CNS_TAG_ATTR_ID);
         if(element->DoubleAttribute(CNS_TAG_ATTR_SIZE))
             obs.size = element->DoubleAttribute(CNS_TAG_ATTR_SIZE);
         else
@@ -62,7 +62,7 @@ bool DynamicObstacles::getObstacles(const char *fileName)
             }
             node.i = sec->IntAttribute(CNS_TAG_ATTR_GX) + 0.5;
             node.j = sec->IntAttribute(CNS_TAG_ATTR_GY) + 0.5;
-            node.g += sec->DoubleAttribute(CNS_TAG_ATTR_DURATION);
+            //node.g += sec->DoubleAttribute(CNS_TAG_ATTR_DURATION);
             obs.sections.push_back(node);
         }
         for(size_t i = 1; i < obs.sections.size(); i++)
